@@ -7,10 +7,7 @@
     </p>
 
     <ul v-else>
-      <li
-        v-for="product in products"
-        :key="product.id"
-      >
+      <li v-for="product in products" :key="product.id">
         {{ product.title }}：¥{{ product.price }}
       </li>
     </ul>

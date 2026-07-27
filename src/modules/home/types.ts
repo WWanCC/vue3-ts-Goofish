@@ -3,4 +3,3 @@ export interface ProductItem {
   title: string
   price: number
 }
-
