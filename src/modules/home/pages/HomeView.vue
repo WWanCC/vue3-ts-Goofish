@@ -31,7 +31,7 @@ async function loadProducts() {
   try {
     const response = await getHomeProducts()
 
-    products.value = response.data.data
+    products.value = response.data
   } catch (error) {
     console.error(error)
     errorMessage.value = '商品加载失败'
