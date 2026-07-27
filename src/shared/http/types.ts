@@ -1,7 +1,11 @@
-export interface ApiResponse<T> {
-  code: number;
-  message: string;
-  data: T;
+
+
+export interface ApiSuccessResponse<T> {
+  data: T
 }
 
-  
+export interface ApiErrorResponse {
+  code: string
+  message: string
+  details?: unknown
+}
