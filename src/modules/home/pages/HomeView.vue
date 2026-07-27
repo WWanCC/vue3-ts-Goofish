@@ -15,32 +15,37 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref } from "vue";
 
-import { getHomeProducts } from '@/modules/home/api/home.api'
-import type { ProductItem } from '@/modules/home/types'
+import { getHomeProducts } from "@/modules/home/api/home.api";
+import type { ProductItem } from "@/modules/home/types";
 
-const products = ref<ProductItem[]>([])
-const loading = ref(false)
-const errorMessage = ref('')
+const products = ref<ProductItem[]>([]);
+const loading = ref(false);
+const errorMessage = ref("");
+
+const cursor = ref<number | null>(null);
+const hasMore = ref(false);
 
 async function loadProducts() {
-  loading.value = true
-  errorMessage.value = ''
+  loading.value = true;
+  errorMessage.value = "";
 
   try {
-    const response = await getHomeProducts({limit:3})
+    const response = await getHomeProducts({ limit: 3 });
 
-    products.value = response.data.list
+    products.value = response.data.list;
+    cursor.value = response.data.nextCursor;
+    hasMore.value = response.data.hasMore;
   } catch (error) {
-    console.error(error)
-    errorMessage.value = '商品加载失败'
+    console.error(error);
+    errorMessage.value = "商品加载失败";
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 
 onMounted(() => {
-  loadProducts()
-})
+  loadProducts();
+});
 </script>

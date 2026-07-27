@@ -23,6 +23,9 @@ export default defineMock({
           price: 129,
         },
       ],
+
+      nextCursor: null,
+      hasMore: false,
     },
   },
 })
