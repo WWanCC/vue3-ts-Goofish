@@ -5,8 +5,6 @@ export default defineMock({
   method: 'GET',
   delay: 900,
   body: {
-    code: 0,
-    message: 'success',
     data: [
       {
         id: 1,
