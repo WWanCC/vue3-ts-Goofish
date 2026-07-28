@@ -11,7 +11,7 @@
     </ul>
 
     <p v-if="loading">正在加载商品……</p>
-    <p v-else-if="products.length > 0">没有更多商品了</p>
+    <p v-else-if="!hasMore && products.length > 0">没有更多商品了</p>
   </main>
 </template>
 
@@ -59,20 +59,19 @@ async function loadProducts() {
   }
 }
 
-
 useInfiniteScroll(
   window,
 
-  // 【新增】接近页面底部时调用现有加载函数
+  // 接近页面底部时调用现有加载函数
   () => {
     return loadProducts();
   },
 
   {
-    // 【新增】距离页面底部还有 200px 时提前加载
+    // 距离页面底部还有 200px 时提前加载
     distance: 200,
 
-    // 【新增】只有满足条件时才允许继续触发
+    // 只有满足条件时才允许继续触发
     canLoadMore: () => {
       return hasMore.value && !loading.value;
     },
