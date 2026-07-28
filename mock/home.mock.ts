@@ -1,4 +1,31 @@
+import { fakerZH_CN } from '@faker-js/faker'
 import { defineMock } from 'vite-plugin-mock-dev-server'
+
+// 【新增】固定 Faker 的随机结果
+fakerZH_CN.seed(20260728)
+
+// 【修改】删除原来手写的 products 数组
+// 使用 Faker 一次性生成 30 条商品
+const products = fakerZH_CN.helpers.multiple(
+  (_, index) => {
+    return {
+      id: index + 1,
+
+      // 【新增】生成商品名称
+      title: fakerZH_CN.commerce.productName(),
+
+      // 【新增】生成 10～3000 的整数价格
+      price: fakerZH_CN.number.int({
+        min: 10,
+        max: 3000,
+      }),
+    }
+  },
+  {
+    // 【新增】生成数量
+    count: 30,
+  },
+)
 
 export default defineMock({
   url: '/api/home/products',
@@ -6,59 +33,43 @@ export default defineMock({
   delay: 900,
 
   body({ query }) {
+    // 【保留】下面仍然是你的分页代码
+    const limit = Number(query.limit ?? 3)
+
     const cursor = query.cursor
       ? Number(query.cursor)
       : null
 
-    // 第一次请求：没有 cursor
-    if (cursor === null) {
-      return {
-        data: {
-          list: [
-            {
-              id: 1,
-              title: '机械键盘，九成新',
-              price: 199,
-            },
-            {
-              id: 2,
-              title: '闲置显示器支架',
-              price: 89,
-            },
-            {
-              id: 3,
-              title: '全新未拆封鼠标',
-              price: 129,
-            },
-          ],
-          nextCursor: 3,
-          hasMore: true,
-        },
-      }
+    let startIndex = 0
+
+    if (cursor !== null) {
+      const cursorIndex = products.findIndex(
+        (product) => product.id === cursor,
+      )
+
+      startIndex = cursorIndex + 1
     }
 
-    // 第二次请求：携带 cursor=3
+    const list = products.slice(
+      startIndex,
+      startIndex + limit,
+    )
+
+    const hasMore =
+      startIndex + list.length < products.length
+
+    const lastProduct = list[list.length - 1]
+
+    const nextCursor =
+      hasMore && lastProduct
+        ? lastProduct.id
+        : null
+
     return {
       data: {
-        list: [
-          {
-            id: 4,
-            title: '二手办公椅',
-            price: 260,
-          },
-          {
-            id: 5,
-            title: '桌面音响',
-            price: 150,
-          },
-          {
-            id: 6,
-            title: '笔记本电脑支架',
-            price: 79,
-          },
-        ],
-        nextCursor: null,
-        hasMore: false,
+        list,
+        nextCursor,
+        hasMore,
       },
     }
   },
