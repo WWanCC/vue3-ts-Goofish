@@ -1,6 +1,5 @@
 <template>
   <main>
-    <!-- 【修改】错误信息单独显示，不再和 loading、列表互斥 -->
     <p v-if="errorMessage">
       {{ errorMessage }}
     </p>
@@ -11,13 +10,8 @@
       </li>
     </ul>
 
-    <button v-if="hasMore" :disabled="loading" @click="loadProducts">
-      {{ loading ? "正在加载商品……" : "加载更多" }}
-    </button>
-     <!-- 【新增】加载结束后显示提示 -->
-    <p v-else-if="products.length > 0">
-      没有更多商品了
-    </p>
+    <p v-if="loading">正在加载商品……</p>
+    <p v-else-if="products.length > 0">没有更多商品了</p>
   </main>
 </template>
 
@@ -27,6 +21,8 @@ import { onMounted, ref } from "vue";
 import { getHomeProducts } from "@/modules/home/api/home.api";
 import type { ProductItem } from "@/modules/home/types";
 
+import { useInfiniteScroll } from "@vueuse/core";
+
 const products = ref<ProductItem[]>([]);
 const loading = ref(false);
 const errorMessage = ref("");
@@ -35,6 +31,7 @@ const cursor = ref<number | null>(null);
 const hasMore = ref(true);
 
 async function loadProducts() {
+  // 正在请求或者没有下一页时，直接结束
   if (loading.value || !hasMore.value) {
     return;
   }
@@ -48,9 +45,11 @@ async function loadProducts() {
       limit: 3,
     });
 
-    //追加新商品
+    //把新一页追加到旧商品后面
     products.value.push(...response.data.list);
+    //保存下一页游标
     cursor.value = response.data.nextCursor;
+    //保存是否还有下一页
     hasMore.value = response.data.hasMore;
   } catch (error) {
     console.error(error);
@@ -59,6 +58,26 @@ async function loadProducts() {
     loading.value = false;
   }
 }
+
+
+useInfiniteScroll(
+  window,
+
+  // 【新增】接近页面底部时调用现有加载函数
+  () => {
+    return loadProducts();
+  },
+
+  {
+    // 【新增】距离页面底部还有 200px 时提前加载
+    distance: 200,
+
+    // 【新增】只有满足条件时才允许继续触发
+    canLoadMore: () => {
+      return hasMore.value && !loading.value;
+    },
+  },
+);
 
 onMounted(() => {
   loadProducts();

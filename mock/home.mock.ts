@@ -23,7 +23,7 @@ const products = fakerZH_CN.helpers.multiple(
   },
   {
     // 生成数量
-    count: 30,
+    count: 300,
   },
 )
 
