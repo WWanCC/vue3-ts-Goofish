@@ -1,16 +1,23 @@
 <template>
   <main>
-    <p v-if="loading">正在加载商品……</p>
-
-    <p v-else-if="errorMessage">
+    <!-- 【修改】错误信息单独显示，不再和 loading、列表互斥 -->
+    <p v-if="errorMessage">
       {{ errorMessage }}
     </p>
 
-    <ul v-else>
+    <ul>
       <li v-for="product in products" :key="product.id">
         {{ product.title }}：¥{{ product.price }}
       </li>
     </ul>
+
+    <button v-if="hasMore" :disabled="loading" @click="loadProducts">
+      {{ loading ? "正在加载商品……" : "加载更多" }}
+    </button>
+     <!-- 【新增】加载结束后显示提示 -->
+    <p v-else-if="products.length > 0">
+      没有更多商品了
+    </p>
   </main>
 </template>
 
@@ -25,16 +32,24 @@ const loading = ref(false);
 const errorMessage = ref("");
 
 const cursor = ref<number | null>(null);
-const hasMore = ref(false);
+const hasMore = ref(true);
 
 async function loadProducts() {
+  if (loading.value || !hasMore.value) {
+    return;
+  }
+
   loading.value = true;
   errorMessage.value = "";
 
   try {
-    const response = await getHomeProducts({ limit: 3 });
+    const response = await getHomeProducts({
+      cursor: cursor.value ?? undefined,
+      limit: 3,
+    });
 
-    products.value = response.data.list;
+    //追加新商品
+    products.value.push(...response.data.list);
     cursor.value = response.data.nextCursor;
     hasMore.value = response.data.hasMore;
   } catch (error) {
