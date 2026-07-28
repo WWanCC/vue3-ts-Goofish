@@ -1,20 +1,20 @@
 import { fakerZH_CN } from '@faker-js/faker'
 import { defineMock } from 'vite-plugin-mock-dev-server'
 
-// 【新增】固定 Faker 的随机结果
+// 设置种子 固定 Faker 的随机结果
 fakerZH_CN.seed(20260728)
 
-// 【修改】删除原来手写的 products 数组
+
 // 使用 Faker 一次性生成 30 条商品
 const products = fakerZH_CN.helpers.multiple(
   (_, index) => {
     return {
       id: index + 1,
 
-      // 【新增】生成商品名称
+      // 生成商品名称
       title: fakerZH_CN.commerce.productName(),
 
-      // 【新增】生成 10～3000 的整数价格
+      // 生成 10～3000 的整数价格
       price: fakerZH_CN.number.int({
         min: 10,
         max: 3000,
@@ -22,7 +22,7 @@ const products = fakerZH_CN.helpers.multiple(
     }
   },
   {
-    // 【新增】生成数量
+    // 生成数量
     count: 30,
   },
 )
@@ -33,7 +33,6 @@ export default defineMock({
   delay: 900,
 
   body({ query }) {
-    // 【保留】下面仍然是你的分页代码
     const limit = Number(query.limit ?? 3)
 
     const cursor = query.cursor
