@@ -59,15 +59,7 @@
         </p>
       </section>
 
-      <!--
-        商品列表
-
-        父元素：
-        flex：启用 Flex 布局
-        flex-wrap：宽度不足时换行
-
-        子元素通过百分比宽度控制每行数量。
-      -->
+      <!-- 商品列表 -->
       <section
         v-if="products.length > 0"
         class="-mx-1.5 flex flex-wrap sm:-mx-2"
@@ -78,7 +70,7 @@
           :key="product.id"
           class="w-1/2 px-1.5 pb-7 sm:w-1/3 sm:px-2 lg:w-1/4 xl:w-1/5 2xl:w-1/6"
         >
-          <!-- 真正的商品卡片 -->
+          <!-- 商品卡片 -->
           <article
             class="group h-full min-w-0 cursor-pointer rounded-[14px] p-1 transition-colors hover:bg-[#fafafa]"
           >
@@ -98,16 +90,43 @@
             <!-- 商品标题 -->
             <h2
               :title="product.title"
-              class="mt-2.5 min-h-[44px] line-clamp-2 text-[15px] leading-[22px] font-normal text-[#222]"
+              class="mt-2.5 min-h-[44px] line-clamp-2 text-[15px] leading-[22px] font-normal text-[#222] -mb-1.5"
             >
+              <span
+                v-if="product.shippingIncluded"
+                class="mr-1 rounded-sm bg-[#ffe500] px-1 py-0.5 text-xs font-semibold text-[#222]"
+              >
+                包邮
+              </span>
+
               {{ product.title }}
             </h2>
 
+            <!-- 服务标签 -->
+            <div
+              v-if="product.serviceTag"
+              class="mt-1.5"
+            >
+              <span
+                class="rounded border border-[#ff9a73] px-1 py-0.5 text-xs text-[#ff5a26]"
+              >
+                {{ product.serviceTag }}
+              </span>
+            </div>
+
+            <!-- 商品属性 -->
+            <p
+              v-if="product.attributeText"
+              :title="product.attributeText"
+              class="mt-1.5 truncate text-xs text-[#999]"
+            >
+              {{ product.attributeText }}
+            </p>
+
             <!-- 商品地区 -->
             <div
-              class="mt-1 flex min-w-0 items-center gap-1 text-xs text-[#999]"
+              class="mt-1.5 flex min-w-0 items-center gap-1 text-xs text-[#999]"
             >
-              <!-- 定位图标 -->
               <svg
                 aria-hidden="true"
                 viewBox="0 0 24 24"
@@ -136,15 +155,55 @@
             </div>
 
             <!-- 商品价格 -->
-            <p class="mt-2 flex items-baseline text-[#ff4f24]">
-              <span class="mr-0.5 text-sm font-semibold">
-                ¥
+            <div class="mt-2 flex min-w-0 items-baseline gap-1.5">
+              <p class="shrink-0 text-[#ff4f24]">
+                <span class="text-sm font-semibold">
+                  ¥
+                </span>
+
+                <span class="text-[22px] leading-none font-bold">
+                  {{ product.price }}
+                </span>
+              </p>
+
+              <!-- 想要人数 -->
+              <span class="shrink-0 text-xs text-[#999]">
+                {{ product.wantedCount }}人想要
               </span>
 
-              <span class="text-[22px] leading-none font-bold">
-                {{ product.price }}
+              <!-- 原价可能不存在 -->
+              <del
+                v-if="product.originalPrice"
+                class="min-w-0 truncate text-xs text-[#aaa]"
+              >
+                ¥{{ product.originalPrice }}
+              </del>
+            </div>
+
+            <!-- 卖家信息 -->
+            <div class="mt-2 flex min-w-0 items-center gap-1.5">
+              <img
+                :src="product.sellerAvatarUrl"
+                :alt="product.sellerName"
+                loading="lazy"
+                class="size-5 shrink-0 rounded-full bg-[#f2f3f5] object-cover"
+              />
+
+              <span
+                :title="product.sellerName"
+                class="min-w-0 truncate text-xs text-[#777]"
+              >
+                {{ product.sellerName }}
               </span>
-            </p>
+
+              <!-- 信用标签可能不存在 -->
+              <span
+                v-if="product.sellerCredit"
+                class="ml-auto shrink-0 rounded-full bg-[#fff1e8] px-2 py-0.5 text-xs text-[#ff6b2c]"
+              >
+                {{ product.sellerCredit }}
+              </span>
+            </div>
           </article>
         </div>
       </section>
@@ -155,7 +214,7 @@
         class="flex items-center justify-center gap-2 py-8 text-sm text-[#999]"
       >
         <span
-          class="size-4 animate-spin rounded-full border-2 border-[#dddddd] border-t-[#ffe000]"
+          class="size-4 animate-spin rounded-full border-2 border-[#ddd] border-t-[#ffe000]"
         ></span>
 
         <span>正在加载更多商品</span>
@@ -164,7 +223,7 @@
       <!-- 已加载全部商品 -->
       <p
         v-else-if="!hasMore && products.length > 0"
-        class="py-8 text-center text-sm text-[#aaaaaa]"
+        class="py-8 text-center text-sm text-[#aaa]"
       >
         没有更多商品了
       </p>
@@ -248,20 +307,13 @@ async function loadProducts() {
       limit: 12,
     })
 
-    /**
-     * 将新请求到的一页商品，
-     * 追加到原有商品数组末尾。
-     */
+    // 将新请求到的一页商品追加到原数组末尾。
     products.value.push(...response.data.list)
 
-    /**
-     * 保存后端返回的下一页游标。
-     */
+    // 保存下一页游标。
     cursor.value = response.data.nextCursor
 
-    /**
-     * 保存后端返回的分页结束状态。
-     */
+    // 保存是否还有下一页。
     hasMore.value = response.data.hasMore
   } catch (error) {
     console.error(error)

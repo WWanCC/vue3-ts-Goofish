@@ -32,7 +32,7 @@ const products: ProductItem[] = fakerZH_CN.helpers.multiple(
     return {
       id: index + 1,
 
-      title: fakerZH_CN.commerce.productName(),
+      title: fakerZH_CN.commerce.productName()+fakerZH_CN.commerce.productName()+fakerZH_CN.commerce.productName(),
 
       price,
 
