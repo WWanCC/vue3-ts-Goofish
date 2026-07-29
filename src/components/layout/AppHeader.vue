@@ -77,9 +77,20 @@ function handleSearch(searchKeyword = keyword.value) {
 
           <button
             type="submit"
-            class="h-8 shrink-0 rounded-full bg-[#ffe500] px-5 text-sm text-[#222]"
+            class="flex h-8 shrink-0 items-center gap-1 rounded-full bg-[#ffe500] px-5 text-sm text-[#222] transition-colors hover:bg-[#f5d900]"
           >
-            搜索
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" class="size-4">
+              <circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="2" />
+
+              <path
+                d="M16 16L21 21"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+
+            <span>搜索</span>
           </button>
         </form>
 
@@ -98,10 +109,50 @@ function handleSearch(searchKeyword = keyword.value) {
       </div>
 
       <!-- 右侧入口 -->
-      <nav class="mt-2 flex shrink-0 items-center gap-8 text-sm text-[#222]">
-        <button type="button">虚拟空间</button>
+      <nav aria-label="用户功能" class="mt-1 flex shrink-0 items-center gap-7 text-sm text-[#222]">
+        <!-- 虚拟空间 -->
+        <button type="button" class="flex items-center gap-1.5 transition-opacity hover:opacity-70">
+          <span
+            class="flex size-7 items-center justify-center rounded-full border border-[#ddd] bg-white"
+          >
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" class="size-4">
+              <circle cx="12" cy="9" r="4" stroke="currentColor" stroke-width="1.8" />
 
-        <button type="button">订单</button>
+              <path
+                d="M5 21C5.6 16.8 8 15 12 15C16 15 18.4 16.8 19 21"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+
+          <span>虚拟空间</span>
+        </button>
+
+        <!-- 订单 -->
+        <button type="button" class="flex items-center gap-1.5 transition-opacity hover:opacity-70">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" class="size-5">
+            <rect
+              x="5"
+              y="3"
+              width="14"
+              height="18"
+              rx="3"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+
+            <path
+              d="M9 8H15M9 12H15"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+
+          <span>订单</span>
+        </button>
       </nav>
     </div>
   </header>
