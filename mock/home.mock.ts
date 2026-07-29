@@ -1,30 +1,71 @@
 import { fakerZH_CN } from '@faker-js/faker'
 import { defineMock } from 'vite-plugin-mock-dev-server'
 
-// 设置种子 固定 Faker 的随机结果
-fakerZH_CN.seed(20260728)
+import type { ProductItem } from '../src/modules/home/types'
 
-// 使用 Faker 一次性生成 30 条商品
-const products = fakerZH_CN.helpers.multiple(
+const serviceTags = [
+  '描述不符包邮退',
+  '验货宝',
+  '极速发货',
+] as const
+
+const attributeTexts = [
+  '全新未拆封',
+  '几乎全新',
+  '轻微使用痕迹',
+  '功能正常',
+  '原装正品',
+] as const
+
+const creditTags = [
+  '卖家信用极好',
+  '卖家信用优秀',
+] as const
+
+const products: ProductItem[] = fakerZH_CN.helpers.multiple(
   (_, index) => {
+    const price = fakerZH_CN.number.int({
+      min: 10,
+      max: 3000,
+    })
+
     return {
       id: index + 1,
 
-      // 生成商品名称
       title: fakerZH_CN.commerce.productName(),
 
-      // 生成 10～3000 的整数价格
-      price: fakerZH_CN.number.int({
-        min: 10,
-        max: 3000,
-      }),
+      price,
+
+      originalPrice:
+        price +
+        fakerZH_CN.number.int({
+          min: 10,
+          max: 500,
+        }),
 
       imageUrl: `https://picsum.photos/seed/product-${index + 1}/400/400`,
+
       location: fakerZH_CN.location.city(),
+
+      shippingIncluded: fakerZH_CN.datatype.boolean(),
+
+      serviceTag: fakerZH_CN.helpers.arrayElement(serviceTags),
+
+      attributeText: fakerZH_CN.helpers.arrayElement(attributeTexts),
+
+      wantedCount: fakerZH_CN.number.int({
+        min: 0,
+        max: 500,
+      }),
+
+      sellerName: fakerZH_CN.person.fullName(),
+
+      sellerAvatarUrl: `https://picsum.photos/seed/seller-${index + 1}/100/100`,
+
+      sellerCredit: fakerZH_CN.helpers.arrayElement(creditTags),
     }
   },
   {
-    // 生成数量
     count: 60,
   },
 )
