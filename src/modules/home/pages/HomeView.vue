@@ -5,7 +5,7 @@
       <h1 class="sr-only">闲鱼商品推荐</h1>
 
       <div class="feed-tabs mb-6 overflow-x-auto pb-1">
-        <ElSegmented v-model="activeCategory" :options="categories" class="feed-segmented -ml-3" />
+        <el-segmented v-model="activeCategory" :options="categories" class="feed-segmented -ml-3" />
       </div>
 
       <!-- 请求错误 -->
