@@ -4,6 +4,8 @@
     <main class="mx-auto max-w-[1480px] rounded-[20px] bg-white px-3 py-5 sm:px-5 lg:px-6">
       <h1 class="sr-only">闲鱼商品推荐</h1>
 
+      <HomeHeroSection />
+
       <div class="feed-tabs mb-6 overflow-x-auto pb-1">
         <el-segmented v-model="activeCategory" :options="categories" class="feed-segmented -ml-3" />
       </div>
@@ -71,7 +73,7 @@ import { useInfiniteScroll } from "@vueuse/core";
 import { getHomeProducts } from "@/modules/home/api/home.api";
 import type { ProductItem } from "@/modules/home/types";
 import ProductCard from "../components/ProductCard.vue";
-
+import HomeHeroSection from "../components/HomeHeroSection.vue";
 /**
  * 顶部分类目前只用于还原原型样式，
  * 暂时不执行真正的商品筛选。
