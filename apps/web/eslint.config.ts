@@ -26,7 +26,7 @@ export default defineConfigWithVueTs(
     files: ['src/**/__tests__/*'],
   },
 
-  ...pluginOxlint.buildFromOxlintConfigFile('.oxlintrc.json'),
+  ...pluginOxlint.buildFromOxlintConfigFile(new URL('./.oxlintrc.json', import.meta.url).pathname),
 
   skipFormatting,
 )
