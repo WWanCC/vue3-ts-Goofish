@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "pnpm --filter @goofish/web dev",
+    "dev": "pnpm -r --parallel --filter @goofish/web --filter @goofish/api run dev",
     "build": "pnpm --filter @goofish/web build",
     "preview": "pnpm --filter @goofish/web preview",
     "test:unit": "pnpm --filter @goofish/web test:unit",
