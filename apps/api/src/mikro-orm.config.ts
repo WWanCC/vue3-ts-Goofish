@@ -2,7 +2,7 @@ import { loadEnvFile } from 'node:process'
 
 import { defineConfig } from '@mikro-orm/mysql'
 import {Product} from "./entities/Product.js";
-
+import { Migrator } from '@mikro-orm/migrations'
 // ========================================
 // 1. 加载 apps/api/.env
 // ========================================
@@ -53,7 +53,7 @@ export default defineConfig({
 
   dbName: getEnv('DB_NAME'),
 
-
+  extensions: [Migrator],
   entities: [
     Product
 
