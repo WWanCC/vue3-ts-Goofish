@@ -1,5 +1,6 @@
 
 import { Hono } from 'hono'
+import home from "./routes/home.js"
 
 // 创建整个后端的 Hono 应用实例
 const app = new Hono()
@@ -9,6 +10,8 @@ app.get('/', (c) => {
   return c.text('Hello Hono!')
 })
 
-// 把 Hono 应用导出去
+app.route('/api/home', home)
+
+
 // 后面的 index.ts 会负责启动它
 export default app
