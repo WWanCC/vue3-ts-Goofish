@@ -1,83 +1,70 @@
-import dotenv from 'dotenv'
+import { loadEnvFile } from 'node:process'
+
 import { defineConfig } from '@mikro-orm/mysql'
-import {fileURLToPath} from "node:url";
 
 // ========================================
-// 1. 明确加载 apps/api/.env
+// 1. 加载 apps/api/.env
 // ========================================
 //
-// 当前文件位于：
-// apps/api/src/mikro-orm.config.ts
+// 当前文件：apps/api/src/mikro-orm.config.ts
+// ../.env： apps/api/.env
 //
-// ../.env 就是：
-// apps/api/.env
-//
-// dotenv 当前版本支持 URL 作为 path。
-const envPath = fileURLToPath(
-  new URL('../.env', import.meta.url),
-)
-
-const envResult = dotenv.config({
-  path: envPath,
-})
+// 使用 import.meta.url 后，路径相对于当前文件计算，
+// 不受 pnpm 命令从哪个目录执行的影响。
+loadEnvFile(new URL('../.env', import.meta.url))
 
 // ========================================
-// 2. 如果 .env 根本没有加载成功，立即报错
+// 2. 读取并检查环境变量
 // ========================================
 //
-// 不要等 MikroORM 连数据库以后才发现密码不存在。
-if (envResult.error) {
-  throw new Error(
-    `无法读取 apps/api/.env：${envResult.error.message}`,
-  )
+// 数据库配置属于“必须存在”的配置。
+// 与其使用 ?? 给默认值导致配置错误被隐藏，
+// 不如启动时直接报错。
+function getEnv(name: string): string {
+  const value = process.env[name]
+
+  if (!value) {
+    throw new Error(`缺少环境变量：${name}`)
+  }
+
+  return value
+}
+
+// DB_PORT 在 process.env 中一定是字符串，
+// 所以这里转换为 number。
+const dbPort = Number(getEnv('DB_PORT'))
+
+// 防止 .env 写成 DB_PORT=abc 之类的错误值。
+if (!Number.isInteger(dbPort)) {
+  throw new Error('环境变量 DB_PORT 必须是整数')
 }
 
 // ========================================
-// 3. 检查必要环境变量
-// ========================================
-
-if (!process.env.DB_PASSWORD) {
-  throw new Error(
-    '没有读取到 DB_PASSWORD，请检查 apps/api/.env',
-  )
-}
-
-// 临时调试：
-// 只检查“有没有密码”，绝对不要把真实密码输出到终端。
-console.log('数据库环境变量：', {
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  dbName: process.env.DB_NAME,
-  hasPassword: Boolean(process.env.DB_PASSWORD),
-})
-
-// ========================================
-// 4. MikroORM 配置
+// 3. MikroORM 配置
 // ========================================
 
 export default defineConfig({
-  host: process.env.DB_HOST ?? '127.0.0.1',
+  host: getEnv('DB_HOST'),
+  port: dbPort,
 
-  port: Number(process.env.DB_PORT ?? 3306),
+  user: getEnv('DB_USER'),
+  password: getEnv('DB_PASSWORD'),
 
-  user: process.env.DB_USER ?? 'root',
+  dbName: getEnv('DB_NAME'),
 
-  password: process.env.DB_PASSWORD,
-
-  dbName: process.env.DB_NAME ?? 'goofish',
-
-  // 现在还没有 Entity。
+  // 当前暂时还没有 Entity。
+  // 下一步创建 Product Entity 后会改这里。
   entities: [],
 
   // 当前阶段允许没有 Entity。
+  // 创建 Product 后这个配置就可以删掉。
   discovery: {
     warnWhenNoEntities: false,
   },
 
-  // goofish 不存在时尝试创建。
+  // 开发阶段，如果数据库不存在则创建数据库。
   ensureDatabase: true,
 
-  // 开发阶段显示 ORM 日志。
-  debug: true,
+  // 生产环境关闭 ORM SQL 调试日志。
+  debug: process.env.NODE_ENV !== 'production',
 })
