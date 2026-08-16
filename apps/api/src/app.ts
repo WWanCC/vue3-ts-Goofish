@@ -1,17 +1,13 @@
-
-import { Hono } from 'hono'
+import {Hono} from 'hono'
 import home from "./routes/home.js"
 
 // 创建整个后端的 Hono 应用实例
 const app = new Hono()
+  .get('/', (c) => {
+    return c.text('Hello Hono!')
+  })
+  .route('/api/home', home)
 
-// 暂时保留这个测试路由，确认后端能正常运行
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
+export type AppType = typeof app
 
-app.route('/api/home', home)
-
-
-// 后面的 index.ts 会负责启动它
 export default app

@@ -1,15 +1,27 @@
-
-
-import { Hono } from 'hono'
+import {Hono} from 'hono'
+import { zValidator } from '@hono/zod-validator'
+import { z } from 'zod'
 
 const home = new Hono()
+  .get(
+    '/products',
 
-home.get('/products', (c) => {
-  // 目前只返回测试数据
-  // 下一步才会把原来的 Mock 商品搬进来
-  return c.json({
-    message: 'Home products route works!',
-  })
-})
+    zValidator(
+      'query',
+      z.object({
+        cursor: z.coerce.number().optional(),
+        limit: z.coerce.number(),
+      }),
+    ),
+
+    (c) => {
+      const query = c.req.valid('query')
+
+      return c.json({
+        cursor: query.cursor,
+        limit: query.limit,
+      })
+    },
+  )
 
 export default home
