@@ -1,6 +1,7 @@
 {
   "name": "@goofish/api",
   "type": "module",
+  "types": "./src/app.ts",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
