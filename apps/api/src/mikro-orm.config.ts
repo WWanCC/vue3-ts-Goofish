@@ -60,7 +60,8 @@ export default defineConfig({
 
   ],
 
-
+  // 当前阶段允许没有 Entity。
+  // 创建 Product 后这个配置就可以删掉。
   discovery: {
     warnWhenNoEntities: false,
   },
