@@ -1,6 +1,7 @@
 import { loadEnvFile } from 'node:process'
 
 import { defineConfig } from '@mikro-orm/mysql'
+import {Product} from "./entities/Product.js";
 
 // ========================================
 // 1. 加载 apps/api/.env
@@ -54,10 +55,12 @@ export default defineConfig({
 
   // 当前暂时还没有 Entity。
   // 下一步创建 Product Entity 后会改这里。
-  entities: [],
+  entities: [
+    Product
 
-  // 当前阶段允许没有 Entity。
-  // 创建 Product 后这个配置就可以删掉。
+  ],
+
+
   discovery: {
     warnWhenNoEntities: false,
   },
