@@ -47,6 +47,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@goofish/api':
+        specifier: workspace:*
+        version: link:../api
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.11)(yaml@2.9.0))

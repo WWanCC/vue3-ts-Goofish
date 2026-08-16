@@ -16,6 +16,7 @@
     "format": "oxfmt src/"
   },
   "dependencies": {
+    "@goofish/api": "workspace:*",
     "@tailwindcss/vite": "^4.3.3",
     "@vueuse/core": "^14.3.0",
     "axios": "^1.18.1",
