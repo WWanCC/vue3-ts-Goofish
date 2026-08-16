@@ -1,8 +1,17 @@
 import { serve } from '@hono/node-server'
 import app from "./app.js"
+import {initOrm} from "./db/orm.js"
+
+
+const orm = await initOrm()
 
 
 
+
+await orm.connect()
+
+// true = 已经连接 MySQL
+console.log(`MySQL connected: ${await orm.isConnected()}`)
 
 serve({
   fetch: app.fetch,
