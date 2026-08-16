@@ -53,8 +53,7 @@ export default defineConfig({
 
   dbName: getEnv('DB_NAME'),
 
-  // 当前暂时还没有 Entity。
-  // 下一步创建 Product Entity 后会改这里。
+
   entities: [
     Product
 
