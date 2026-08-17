@@ -137,7 +137,7 @@ async function loadProducts() {
   errorMessage.value = "";
 
   try {
-    const response = await getHomeProducts({
+    const data = await getHomeProducts({
       cursor: cursor.value ?? undefined,
 
       // PC 最宽时一行 6 张卡片，
@@ -146,13 +146,13 @@ async function loadProducts() {
     });
 
     // 将新请求到的一页商品追加到原数组末尾。
-    products.value.push(...response.data.list);
+    products.value.push(...data.list);
 
     // 保存下一页游标。
-    cursor.value = response.data.nextCursor;
+    cursor.value = data.nextCursor;
 
     // 保存是否还有下一页。
-    hasMore.value = response.data.hasMore;
+    hasMore.value = data.hasMore;
   } catch (error) {
     console.error(error);
 
