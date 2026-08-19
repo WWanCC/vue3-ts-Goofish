@@ -37,7 +37,7 @@ const products = new Hono()
       }
 
       // 找到了，直接返回这一件商品。
-      return c.json(product)
+      return c.json(product,200)
     },
   )
 
