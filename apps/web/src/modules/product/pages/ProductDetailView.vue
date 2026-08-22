@@ -51,7 +51,14 @@ async function loadProduct() {
   const id = Number(route.params.id)
   // 每次请求前先清空旧错误
   errorMessage.value = ''
+
+  if (!Number.isInteger(id) || id <= 0) {
+    errorMessage.value = '商品 ID 不合法'
+    return
+  }
+
   loading.value = true
+
   try {
     // 调用商品详情 RPC
     product.value = await getProductDetail(id)
