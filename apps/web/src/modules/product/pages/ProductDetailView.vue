@@ -20,9 +20,14 @@
       </p>
 
 
-
+      <p
+        v-if="loading"
+        class="mt-6 text-gray-500"
+      >
+        正在加载商品...
+      </p>
     </div>
-    <!-- 新增：请求失败时显示错误 -->
+    <!--请求失败时显示错误 -->
     <p
       v-if="errorMessage"
       class="mt-6 text-red-500"
@@ -42,15 +47,16 @@ const route = useRoute()
 
 const product = ref<ProductDetailResponse | null>(null)
 const errorMessage = ref('')
+const loading = ref(false)
+
 async function loadProduct() {
   const id = Number(route.params.id)
   // 每次请求前先清空旧错误
   errorMessage.value = ''
-
+  loading.value = true
   try {
     // 调用商品详情 RPC
-    product.value =
-      await getProductDetail(id)
+    product.value = await getProductDetail(id)
   } catch (error) {
     // 请求失败先打印到控制台
     console.error(error)
@@ -58,6 +64,9 @@ async function loadProduct() {
     // 页面显示错误
     errorMessage.value =
       '商品加载失败，请稍后重试'
+  }
+  finally {
+    loading.value = false
   }
 }
 
