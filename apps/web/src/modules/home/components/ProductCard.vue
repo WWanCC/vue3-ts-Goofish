@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type {ProductItem} from "../types";
+import {RouterLink} from 'vue-router'
 
 defineProps<{
   product: ProductItem;
@@ -7,7 +8,11 @@ defineProps<{
 </script>
 
 <template>
-  <router-link :to="`/product/${product.id}`" class="block h-full text-inherit no-underline"> //router-link渲染成a标签
+  <!--  router-link渲染成a标签-->
+  <router-link :to="{
+    name:'product-detail',
+    params: {id:product.id}
+  }" class="block h-full text-inherit no-underline">
     <article
       class="group h-full min-w-0 cursor-pointer rounded-[14px] p-1 transition-colors hover:bg-[#fafafa]"
     >
