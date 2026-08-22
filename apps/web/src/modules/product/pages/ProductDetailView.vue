@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
+import {onMounted, ref, watch} from 'vue'
 import { useRoute } from 'vue-router'
 import {getProductDetail , type ProductDetailResponse} from '@/modules/product/api/product.api.ts'
 
@@ -49,6 +49,8 @@ const loading = ref(false)
 
 async function loadProduct() {
   const id = Number(route.params.id)
+
+  product.value = null
   // 每次请求前先清空旧错误
   errorMessage.value = ''
 
@@ -75,10 +77,12 @@ async function loadProduct() {
   }
 }
 
-// 页面第一次加载完成后，请求商品详情
-onMounted(async () => {
-  await loadProduct()
-})
+
+watch(
+  () => route.params.id,
+  ()=>{loadProduct()},
+  {immediate: true}
+)
 </script>
 
 
