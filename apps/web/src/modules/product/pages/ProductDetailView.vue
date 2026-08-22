@@ -19,14 +19,16 @@
         ¥{{ product.price }}
       </p>
 
-      <!-- 新增：请求失败时显示错误 -->
-      <p
-        v-if="errorMessage"
-        class="mt-6 text-red-500"
-      >
-        {{ errorMessage }}
-      </p>
+
+
     </div>
+    <!-- 新增：请求失败时显示错误 -->
+    <p
+      v-if="errorMessage"
+      class="mt-6 text-red-500"
+    >
+      {{ errorMessage }}
+    </p>
   </div>
 </template>
 
