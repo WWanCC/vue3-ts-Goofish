@@ -5,7 +5,7 @@ import type {InferResponseType} from 'hono/client'
 //先把这个 RPC 请求方法单独拿出来
 const getProductDetailRequest = client.api.products[':id'].$get
 
-type ProductDetailResponse = InferResponseType<
+export type ProductDetailResponse = InferResponseType<
   typeof getProductDetailRequest,
   200
 >
@@ -17,15 +17,11 @@ type ProductDetailError = InferResponseType<
 
 export async function getProductDetail(id: number): Promise<ProductDetailResponse> {
 
-
-
   const response = await getProductDetailRequest({
     param: {
       id: String(id),
     },
   })
-
-
 
   // 后端明确可能返回 404。
   if (response.status === 404) {
