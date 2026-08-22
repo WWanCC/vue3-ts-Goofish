@@ -18,22 +18,20 @@
       <p class="mt-2 text-xl">
         ¥{{ product.price }}
       </p>
-
-
-      <p
-        v-if="loading"
-        class="mt-6 text-gray-500"
-      >
-        正在加载商品...
-      </p>
     </div>
+
     <!--请求失败时显示错误 -->
     <p
       v-if="errorMessage"
       class="mt-6 text-red-500"
     >
       {{ errorMessage }}
-    </p>
+    </p><p
+    v-if="loading"
+    class="mt-6 text-gray-500"
+  >
+    正在加载商品...
+  </p>
   </div>
 </template>
 
