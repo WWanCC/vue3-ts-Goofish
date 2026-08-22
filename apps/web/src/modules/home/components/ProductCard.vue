@@ -9,7 +9,7 @@ defineProps<{
 
 <template>
   <!--  router-link渲染成a标签-->
-  <router-link :to="{
+  <RouterLink :to="{
     name:'product-detail',
     params: {id:product.id}
   }" class="block h-full text-inherit no-underline">
@@ -117,5 +117,5 @@ defineProps<{
       </span>
       </div>
     </article>
-  </router-link>
+  </RouterLink>
 </template>
