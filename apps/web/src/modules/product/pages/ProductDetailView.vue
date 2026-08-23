@@ -1,10 +1,12 @@
 <template>
-  <!-- 修改：整个详情页使用闲鱼类似的浅灰背景 -->
+  <!-- 整个详情页背景 -->
   <div class="min-h-screen bg-[#f5f6f7] px-4 py-6">
 
     <main class="mx-auto max-w-[1200px]">
 
+      <!-- ============================= -->
       <!-- 加载状态 -->
+      <!-- ============================= -->
       <p
         v-if="loading"
         class="rounded-2xl bg-white p-6 text-[#999]"
@@ -12,7 +14,10 @@
         正在加载商品...
       </p>
 
+
+      <!-- ============================= -->
       <!-- 错误状态 -->
+      <!-- ============================= -->
       <p
         v-if="errorMessage"
         class="rounded-2xl bg-white p-6 text-red-500"
@@ -20,11 +25,14 @@
         {{ errorMessage }}
       </p>
 
-      <!-- 商品请求成功后再显示详情 -->
+
+      <!-- ============================= -->
+      <!-- 商品加载成功 -->
+      <!-- ============================= -->
       <template v-if="product">
 
         <!-- ============================= -->
-        <!-- 新增：卖家信息横条 -->
+        <!-- 卖家信息横条 -->
         <!-- ============================= -->
         <section
           class="flex items-center gap-3 rounded-2xl bg-white px-5 py-4"
@@ -56,7 +64,7 @@
 
             </div>
 
-            <!-- 暂时使用已有 location -->
+            <!-- 卖家地区 -->
             <p class="mt-1 text-xs text-[#999]">
               {{ product.location }}
             </p>
@@ -66,38 +74,73 @@
 
 
         <!-- ============================= -->
-        <!-- 新增：商品详情主体 -->
+        <!-- 商品详情主体 -->
         <!-- ============================= -->
         <section
           class="mt-4 grid gap-8 rounded-2xl bg-white p-5 md:grid-cols-2"
         >
 
-          <!-- 左侧：商品图片区域 -->
-          <div
-            class="flex min-h-[500px] items-center justify-center overflow-hidden rounded-2xl bg-[#f5f5f5]"
-          >
-            <img
-              :src="product.imageUrl"
-              :alt="product.title"
-              class="max-h-[620px] max-w-full object-contain"
-            />
+          <!-- ============================= -->
+          <!-- 左侧：商品多图 -->
+          <!-- ============================= -->
+          <div class="flex gap-3">
+
+            <!-- 缩略图列表 -->
+            <div class="flex shrink-0 flex-col gap-3">
+
+              <button
+                v-for="image in product.images"
+                :key="image.id"
+                type="button"
+                class="size-20 overflow-hidden rounded-lg border-2 bg-[#f5f5f5]"
+                :class="
+                  activeImageUrl === image.url
+                    ? 'border-[#ffe500]'
+                    : 'border-transparent'
+                "
+                @click="activeImageUrl = image.url"
+              >
+                <img
+                  :src="image.url"
+                  :alt="product.title"
+                  class="size-full object-cover"
+                />
+              </button>
+
+            </div>
+
+
+            <!-- 当前主图 -->
+            <div
+              class="flex min-h-[500px] min-w-0 flex-1 items-center justify-center overflow-hidden rounded-2xl bg-[#f5f5f5]"
+            >
+              <img
+                :src="activeImageUrl"
+                :alt="product.title"
+                class="max-h-[620px] max-w-full object-contain"
+              />
+            </div>
+
           </div>
 
 
+          <!-- ============================= -->
           <!-- 右侧：商品信息 -->
+          <!-- ============================= -->
           <div class="py-4">
 
             <!-- 价格 -->
             <div class="text-[#ff4f24]">
 
-    <span class="text-lg font-semibold">
-      ¥
-    </span>
+              <span class="text-lg font-semibold">
+                ¥
+              </span>
 
               <span class="text-4xl font-bold">
-      {{ product.price }}
-    </span>
+                {{ product.price }}
+              </span>
 
+              <!-- 原价 -->
               <del
                 v-if="product.originalPrice"
                 class="ml-3 text-sm font-normal text-[#aaa]"
@@ -108,27 +151,27 @@
             </div>
 
 
-            <!-- 包邮 -->
+            <!-- 包邮标签 -->
             <div
               v-if="product.shippingIncluded"
               class="mt-4"
             >
-    <span
-      class="rounded bg-[#ffe500] px-2 py-1 text-xs font-medium text-[#222]"
-    >
-      包邮
-    </span>
+              <span
+                class="rounded bg-[#ffe500] px-2 py-1 text-xs font-medium text-[#222]"
+              >
+                包邮
+              </span>
             </div>
 
 
-            <!-- 新增：服务保障 -->
+            <!-- 服务保障 -->
             <div
               v-if="product.serviceTag"
               class="mt-5 rounded-xl bg-[#f7f7f7] px-4 py-3"
             >
-    <span class="text-sm font-medium text-[#333]">
-      {{ product.serviceTag }}
-    </span>
+              <span class="text-sm font-medium text-[#333]">
+                {{ product.serviceTag }}
+              </span>
             </div>
 
 
@@ -149,24 +192,25 @@
             </p>
 
 
-            <!-- 修改：地区 + 想要人数 -->
+            <!-- 地区 + 想要人数 -->
             <div
               class="mt-6 flex items-center justify-between text-sm text-[#999]"
             >
-    <span>
-      发布地区：
-      <span class="text-[#555]">
-        {{ product.location }}
-      </span>
-    </span>
+              <span>
+                发布地区：
+
+                <span class="text-[#555]">
+                  {{ product.location }}
+                </span>
+              </span>
 
               <span>
-      {{ product.wantedCount }} 人想要
-    </span>
+                {{ product.wantedCount }} 人想要
+              </span>
             </div>
 
 
-            <!-- 新增：操作按钮 -->
+            <!-- 操作按钮 -->
             <div class="mt-10 flex gap-3">
 
               <button
@@ -205,54 +249,151 @@
 
 
 <script lang="ts" setup>
-import {ref, watch} from 'vue'
-import {useRoute} from 'vue-router'
-import {getProductDetail, type ProductDetailResponse} from '@/modules/product/api/product.api.ts'
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 
-// 获取当前路由信息
+import {
+  getProductDetail,
+  type ProductDetailResponse,
+} from '@/modules/product/api/product.api.ts'
+
+
+// =============================
+// 获取当前路由
+// =============================
 const route = useRoute()
 
-const product = ref<ProductDetailResponse | null>(null)
+
+// =============================
+// 商品详情数据
+// =============================
+const product =
+  ref<ProductDetailResponse | null>(null)
+
+
+// =============================
+// 页面状态
+// =============================
 const errorMessage = ref('')
+
 const loading = ref(false)
 
+
+// =============================
+// 新增：当前显示的主图 URL
+// =============================
+const activeImageUrl = ref('')
+
+
+// =============================
+// 加载商品详情
+// =============================
 async function loadProduct() {
+
+  // URL 中的 id 默认是字符串，
+  // 所以转换成 number。
   const id = Number(route.params.id)
 
+
+  // 清空上一件商品的数据
   product.value = null
-  // 每次请求前先清空旧错误
+
+  // 清空上一件商品的主图
+  activeImageUrl.value = ''
+
+  // 清空旧错误
   errorMessage.value = ''
 
+
+  // =============================
+  // 商品 ID 校验
+  // =============================
   if (!Number.isInteger(id) || id <= 0) {
     errorMessage.value = '商品 ID 不合法'
     return
   }
 
+
+  // 开始加载
   loading.value = true
 
+
   try {
+
+    // =============================
     // 调用商品详情 RPC
-    product.value = await getProductDetail(id)
+    // =============================
+    const data =
+      await getProductDetail(id)
+
+
+    // 保存商品详情
+    product.value = data
+
+
+    // =============================
+    // 初始化主图
+    // =============================
+    //
+    // 优先使用 images 第一张图片。
+    //
+    // 如果 images 是空数组：
+    //
+    // data.images[0]
+    // ↓
+    // undefined
+    //
+    // ?.url
+    // ↓
+    // undefined
+    //
+    // 然后通过 ??
+    // 使用原来的 imageUrl 作为兜底。
+    //
+    activeImageUrl.value =
+      data.images[0]?.url ?? data.imageUrl
+
   } catch (error) {
-    // 请求失败先打印到控制台
+
     console.error(error)
 
-    // 页面显示错误
     errorMessage.value =
       '商品加载失败，请稍后重试'
+
   } finally {
+
+    // 不管成功还是失败，
+    // 请求结束后都关闭 loading。
     loading.value = false
+
   }
 }
 
 
+// =============================
+// 监听路由商品 id
+// =============================
+//
+// 第一次进入页面：
+// immediate: true
+// ↓
+// 自动执行 loadProduct()
+//
+// /product/1 → /product/2
+// ↓
+// route.params.id 变化
+// ↓
+// 再执行一次 loadProduct()
+//
 watch(
   () => route.params.id,
+
   () => {
     loadProduct()
   },
-  {immediate: true}
+
+  {
+    immediate: true,
+  },
 )
 </script>
-
-

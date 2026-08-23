@@ -24,6 +24,8 @@ const products = new Hono()
       // 根据主键 id 查询一件商品。
       const product = await em.findOne(Product, {
         id,
+      },{
+        populate:['images']
       })
 
       // findOne 找不到数据时会得到 null。

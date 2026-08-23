@@ -1,4 +1,4 @@
-import { defineEntity, p } from '@mikro-orm/core'
+import {defineEntity, p, QueryOrder} from '@mikro-orm/core'
 import { ProductImage } from './ProductImage.js'
 export const Product = defineEntity({
   name: 'Product',
@@ -30,7 +30,12 @@ export const Product = defineEntity({
 
     sellerCredit: p.string().nullable(),
 
-    images: () => p.oneToMany(ProductImage).mappedBy('product'),
+    images: () => p.oneToMany(ProductImage)
+      .mappedBy('product')
+      .orderBy({
+        sortOrder: QueryOrder.ASC,
+      })
+    ,
 
   },
 })
