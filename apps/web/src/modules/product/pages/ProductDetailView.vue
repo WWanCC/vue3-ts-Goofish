@@ -90,15 +90,14 @@
             <!-- 价格 -->
             <div class="text-[#ff4f24]">
 
-              <span class="text-lg font-semibold">
-                ¥
-              </span>
+    <span class="text-lg font-semibold">
+      ¥
+    </span>
 
               <span class="text-4xl font-bold">
-                {{ product.price }}
-              </span>
+      {{ product.price }}
+    </span>
 
-              <!-- 原价存在时显示 -->
               <del
                 v-if="product.originalPrice"
                 class="ml-3 text-sm font-normal text-[#aaa]"
@@ -110,13 +109,26 @@
 
 
             <!-- 包邮 -->
-            <div class="mt-4">
-              <span
-                v-if="product.shippingIncluded"
-                class="rounded bg-[#ffe500] px-2 py-1 text-xs font-medium text-[#222]"
-              >
-                包邮
-              </span>
+            <div
+              v-if="product.shippingIncluded"
+              class="mt-4"
+            >
+    <span
+      class="rounded bg-[#ffe500] px-2 py-1 text-xs font-medium text-[#222]"
+    >
+      包邮
+    </span>
+            </div>
+
+
+            <!-- 新增：服务保障 -->
+            <div
+              v-if="product.serviceTag"
+              class="mt-5 rounded-xl bg-[#f7f7f7] px-4 py-3"
+            >
+    <span class="text-sm font-medium text-[#333]">
+      {{ product.serviceTag }}
+    </span>
             </div>
 
 
@@ -137,12 +149,47 @@
             </p>
 
 
-            <!-- 地区 -->
-            <div class="mt-6 text-sm text-[#999]">
-              发布地区：
-              <span class="text-[#555]">
-                {{ product.location }}
-              </span>
+            <!-- 修改：地区 + 想要人数 -->
+            <div
+              class="mt-6 flex items-center justify-between text-sm text-[#999]"
+            >
+    <span>
+      发布地区：
+      <span class="text-[#555]">
+        {{ product.location }}
+      </span>
+    </span>
+
+              <span>
+      {{ product.wantedCount }} 人想要
+    </span>
+            </div>
+
+
+            <!-- 新增：操作按钮 -->
+            <div class="mt-10 flex gap-3">
+
+              <button
+                type="button"
+                class="flex-1 rounded-full bg-[#ffe500] px-6 py-3 text-base font-medium text-[#222] transition hover:bg-[#f5d900]"
+              >
+                聊一聊
+              </button>
+
+              <button
+                type="button"
+                class="flex-1 rounded-full bg-[#333] px-6 py-3 text-base font-medium text-white transition hover:bg-[#222]"
+              >
+                立即购买
+              </button>
+
+              <button
+                type="button"
+                class="rounded-full bg-[#f5f5f5] px-6 py-3 text-base text-[#333] transition hover:bg-[#ebebeb]"
+              >
+                收藏
+              </button>
+
             </div>
 
           </div>
@@ -152,16 +199,15 @@
       </template>
 
     </main>
+
   </div>
 </template>
 
 
-
-
 <script lang="ts" setup>
-import { ref, watch} from 'vue'
-import { useRoute } from 'vue-router'
-import {getProductDetail , type ProductDetailResponse} from '@/modules/product/api/product.api.ts'
+import {ref, watch} from 'vue'
+import {useRoute} from 'vue-router'
+import {getProductDetail, type ProductDetailResponse} from '@/modules/product/api/product.api.ts'
 
 // 获取当前路由信息
 const route = useRoute()
@@ -194,8 +240,7 @@ async function loadProduct() {
     // 页面显示错误
     errorMessage.value =
       '商品加载失败，请稍后重试'
-  }
-  finally {
+  } finally {
     loading.value = false
   }
 }
@@ -203,7 +248,9 @@ async function loadProduct() {
 
 watch(
   () => route.params.id,
-  ()=>{loadProduct()},
+  () => {
+    loadProduct()
+  },
   {immediate: true}
 )
 </script>
