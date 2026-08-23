@@ -1,5 +1,5 @@
 import { defineEntity, p } from '@mikro-orm/core'
-
+import { ProductImage } from './ProductImage.js'
 export const Product = defineEntity({
   name: 'Product',
 
@@ -29,5 +29,8 @@ export const Product = defineEntity({
     sellerAvatarUrl: p.string(),
 
     sellerCredit: p.string().nullable(),
+
+    images: () => p.oneToMany(ProductImage).mappedBy('product'),
+
   },
 })

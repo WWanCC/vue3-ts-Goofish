@@ -1,8 +1,10 @@
 import { loadEnvFile } from 'node:process'
 
 import { defineConfig } from '@mikro-orm/mysql'
-import {Product} from "./entities/Product.js";
 import { Migrator } from '@mikro-orm/migrations'
+
+import {Product} from "./entities/Product.js";
+import { ProductImage } from './entities/ProductImage.js'
 // ========================================
 // 1. 加载 apps/api/.env
 // ========================================
@@ -55,7 +57,8 @@ export default defineConfig({
 
   extensions: [Migrator],
   entities: [
-    Product
+    Product,
+    ProductImage
 
   ],
 
