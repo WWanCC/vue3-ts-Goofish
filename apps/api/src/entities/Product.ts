@@ -1,5 +1,7 @@
 import {defineEntity, p, QueryOrder} from '@mikro-orm/core'
-import { ProductImage } from './ProductImage.js'
+import {ProductImage} from './ProductImage.js'
+import {User} from "./User.js";
+
 export const Product = defineEntity({
   name: 'Product',
 
@@ -24,11 +26,10 @@ export const Product = defineEntity({
 
     wantedCount: p.integer(),
 
-    sellerName: p.string(),
 
-    sellerAvatarUrl: p.string(),
-
-    sellerCredit: p.string().nullable(),
+    seller: () =>
+      p
+        .manyToOne(User),
 
     images: () => p.oneToMany(ProductImage)
       .mappedBy('product')

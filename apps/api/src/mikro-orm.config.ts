@@ -5,6 +5,7 @@ import { Migrator } from '@mikro-orm/migrations'
 
 import {Product} from "./entities/Product.js";
 import { ProductImage } from './entities/ProductImage.js'
+import {User} from "./entities/User.js";
 // ========================================
 // 1. 加载 apps/api/.env
 // ========================================
@@ -58,8 +59,8 @@ export default defineConfig({
   extensions: [Migrator],
   entities: [
     Product,
-    ProductImage
-
+    ProductImage,
+    User
   ],
 
   // 当前阶段允许没有 Entity。

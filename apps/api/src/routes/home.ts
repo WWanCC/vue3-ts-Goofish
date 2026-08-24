@@ -51,6 +51,7 @@ const home = new Hono()
         Product,
         where,
         {
+          populate:['seller'],
           orderBy: {
             id: 'asc',
           },

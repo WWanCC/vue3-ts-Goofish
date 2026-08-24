@@ -96,24 +96,24 @@ defineProps<{
       </div>
 
       <!-- 卖家信息 -->
-      <div class="mt-2 flex min-w-0 items-center gap-1.5">
+      <div class="mt-2 flex min-w-0 items-center gap-1.5" v-if="product.seller">
         <img
-          :src="product.sellerAvatarUrl"
-          :alt="product.sellerName"
+          :src="product.seller.avatarUrl"
+          :alt="product.seller.nickname"
           loading="lazy"
           class="size-5 shrink-0 rounded-full bg-[#f2f3f5] object-cover"
         />
 
-        <span :title="product.sellerName" class="min-w-0 truncate text-xs text-[#777]">
-        {{ product.sellerName }}
+        <span :title="product.seller.nickname" class="min-w-0 truncate text-xs text-[#777]">
+        {{ product.seller.nickname }}
       </span>
 
         <!-- 信用标签可能不存在 -->
         <span
-          v-if="product.sellerCredit"
+          v-if="product.seller.credit"
           class="ml-auto shrink-0 rounded-full bg-[#fff1e8] px-2 py-0.5 text-xs text-[#ff6b2c]"
         >
-        {{ product.sellerCredit }}
+        {{ product.seller.credit }}
       </span>
       </div>
     </article>

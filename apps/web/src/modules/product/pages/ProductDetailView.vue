@@ -39,8 +39,8 @@
         >
           <!-- 卖家头像 -->
           <img
-            :src="product.sellerAvatarUrl"
-            :alt="product.sellerName"
+            :src="product.seller.avatarUrl"
+            :alt="product.seller.nickname"
             class="size-11 shrink-0 rounded-full object-cover"
           />
 
@@ -51,15 +51,15 @@
 
               <!-- 卖家昵称 -->
               <span class="truncate font-medium text-[#222]">
-                {{ product.sellerName }}
+                {{ product.seller.nickname  }}
               </span>
 
               <!-- 卖家信用标签 -->
               <span
-                v-if="product.sellerCredit"
+                v-if="product.seller.credit"
                 class="shrink-0 rounded bg-[#fff2b2] px-2 py-0.5 text-xs text-[#7a6500]"
               >
-                {{ product.sellerCredit }}
+                {{ product.seller.credit }}
               </span>
 
             </div>

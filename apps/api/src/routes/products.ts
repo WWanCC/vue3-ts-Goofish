@@ -25,7 +25,10 @@ const products = new Hono()
       const product = await em.findOne(Product, {
         id,
       },{
-        populate:['images']
+        populate:[
+          'images',
+          'seller',
+        ]
       })
 
       // findOne 找不到数据时会得到 null。
